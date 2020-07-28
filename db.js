@@ -22,7 +22,7 @@ const posts = [
     id: '32542345',
     title: 'First Post',
     body: '',
-    published: false,
+    published: true,
     author: 1,
   },
   {

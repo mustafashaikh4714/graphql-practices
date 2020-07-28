@@ -1,3 +1,4 @@
+import { v4 as uuidv4 } from 'uuid'
 const Mutation = {
   createUser(parent, args, { db }, info) {
     const emailTaken = db.users.some((user) => user.email === args.data.email)
@@ -19,7 +20,7 @@ const Mutation = {
     db.posts.push(newPost)
     return newPost
   },
-  addComment(parent, args, { db }, info) {
+  addComment(parent, args, { db, pubsub }, info) {
     const userExists = db.users.some((user) => user.id === args.data.author)
     if (!userExists) throw new Error('User not found!')
 
@@ -34,6 +35,7 @@ const Mutation = {
       ...args.data,
     }
     db.comments.push(newComment)
+    pubsub.publish(`comment ${args.data.post}`, { comment: newComment })
     return newComment
   },
 }
